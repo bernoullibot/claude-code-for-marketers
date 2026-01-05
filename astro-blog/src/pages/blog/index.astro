@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const allTags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
+const allCategories = [...new Set(posts.flatMap((post) => post.data.categories))].sort();
+---
+
+<BaseLayout
+  title="Blog"
+  description="Read all blog posts about technology, development, and more."
+>
+  <h1>Blog</h1>
+
+  {(allCategories.length > 0 || allTags.length > 0) && (
+    <aside class="filters">
+      {allCategories.length > 0 && (
+        <div class="filter-group">
+          <strong>Categories:</strong>
+          {allCategories.map((category) => (
+            <span class="category">{category}</span>
+          ))}
+        </div>
+      )}
+      {allTags.length > 0 && (
+        <div class="filter-group">
+          <strong>Tags:</strong>
+          {allTags.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </aside>
+  )}
+
+  {posts.length > 0 ? (
+    <ul class="post-list">
+      {posts.map((post) => (
+        <li>
+          <a href={`/blog/${post.id}`}>
+            <h2>{post.data.title}</h2>
+            <p class="description">{post.data.description}</p>
+            <div class="meta">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </time>
+              <span class="author">by {post.data.author}</span>
+            </div>
+            {post.data.tags.length > 0 && (
+              <div class="tags">
+                {post.data.tags.map((tag) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="empty">No posts yet. Check back soon!</p>
+  )}
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .filters {
+    background: #f5f5f5;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .category,
+  .tag {
+    background: #e0e0e0;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+  }
+
+  .category {
+    background: var(--color-primary);
+    color: white;
+  }
+
+  .post-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .post-list li a {
+    display: block;
+    padding: 1.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    color: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .post-list li a:hover {
+    text-decoration: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .post-list h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+  }
+
+  .post-list .description {
+    color: var(--color-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .empty {
+    color: var(--color-muted);
+    text-align: center;
+    padding: 3rem 0;
+  }
+</style>

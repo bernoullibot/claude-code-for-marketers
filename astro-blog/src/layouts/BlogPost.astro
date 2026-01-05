@@ -1,0 +1,185 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, updatedDate, author, image, imageAlt, tags, categories } = post.data;
+
+const formattedPubDate = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const formattedUpdatedDate = updatedDate?.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  imageAlt={imageAlt}
+  article={{
+    publishedTime: pubDate,
+    modifiedTime: updatedDate,
+    author,
+    tags,
+  }}
+>
+  <article>
+    <header class="post-header">
+      <h1>{title}</h1>
+      <div class="meta">
+        <time datetime={pubDate.toISOString()}>{formattedPubDate}</time>
+        {updatedDate && (
+          <span class="updated">
+            (Updated: <time datetime={updatedDate.toISOString()}>{formattedUpdatedDate}</time>)
+          </span>
+        )}
+        <span class="author">by {author}</span>
+      </div>
+      {(categories.length > 0 || tags.length > 0) && (
+        <div class="taxonomies">
+          {categories.length > 0 && (
+            <div class="categories">
+              <strong>Categories:</strong>
+              {categories.map((category) => (
+                <span class="category">{category}</span>
+              ))}
+            </div>
+          )}
+          {tags.length > 0 && (
+            <div class="tags">
+              <strong>Tags:</strong>
+              {tags.map((tag) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </header>
+    {image && <img src={image} alt={imageAlt || title} class="featured-image" />}
+    <div class="content">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    max-width: 100%;
+  }
+
+  .post-header {
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+
+  .meta {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .updated {
+    font-style: italic;
+  }
+
+  .taxonomies {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .categories,
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .category,
+  .tag {
+    background: #e0e0e0;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+  }
+
+  .category {
+    background: var(--color-primary);
+    color: white;
+  }
+
+  .featured-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .content {
+    font-size: 1.1rem;
+  }
+
+  .content :global(h2) {
+    font-size: 1.75rem;
+    margin: 2rem 0 1rem;
+  }
+
+  .content :global(h3) {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  .content :global(p) {
+    margin-bottom: 1.25rem;
+  }
+
+  .content :global(ul),
+  .content :global(ol) {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .content :global(pre) {
+    background: #1a1a1a;
+    color: #f0f0f0;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 1.25rem;
+  }
+
+  .content :global(code) {
+    font-family: 'Menlo', 'Monaco', monospace;
+    font-size: 0.9em;
+  }
+
+  .content :global(blockquote) {
+    border-left: 4px solid var(--color-primary);
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--color-muted);
+  }
+</style>
