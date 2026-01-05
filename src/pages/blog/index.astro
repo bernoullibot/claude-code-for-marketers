@@ -11,26 +11,33 @@ const allCategories = [...new Set(posts.flatMap((post) => post.data.categories))
 
 <BaseLayout
   title="Blog"
-  description="Read all blog posts about technology, development, and more."
+  description="Tutorials and guides for using Claude Code as a marketer. Learn AI-assisted development without coding experience."
 >
-  <h1>Blog</h1>
+  <header class="page-header">
+    <h1><span class="prompt">$</span> ls ./posts</h1>
+    <p class="subtitle">All tutorials and guides</p>
+  </header>
 
   {(allCategories.length > 0 || allTags.length > 0) && (
     <aside class="filters">
       {allCategories.length > 0 && (
         <div class="filter-group">
-          <strong>Categories:</strong>
-          {allCategories.map((category) => (
-            <span class="category">{category}</span>
-          ))}
+          <span class="filter-label">Categories:</span>
+          <div class="filter-items">
+            {allCategories.map((category) => (
+              <span class="category">{category}</span>
+            ))}
+          </div>
         </div>
       )}
       {allTags.length > 0 && (
         <div class="filter-group">
-          <strong>Tags:</strong>
-          {allTags.map((tag) => (
-            <span class="tag">{tag}</span>
-          ))}
+          <span class="filter-label">Tags:</span>
+          <div class="filter-items">
+            {allTags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
         </div>
       )}
     </aside>
@@ -38,125 +45,262 @@ const allCategories = [...new Set(posts.flatMap((post) => post.data.categories))
 
   {posts.length > 0 ? (
     <ul class="post-list">
-      {posts.map((post) => (
-        <li>
+      {posts.map((post, index) => (
+        <li style={`animation-delay: ${index * 0.05}s`}>
           <a href={`/blog/${post.id}`}>
-            <h2>{post.data.title}</h2>
-            <p class="description">{post.data.description}</p>
-            <div class="meta">
-              <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </time>
-              <span class="author">by {post.data.author}</span>
-            </div>
-            {post.data.tags.length > 0 && (
-              <div class="tags">
-                {post.data.tags.map((tag) => (
-                  <span class="tag">{tag}</span>
-                ))}
+            <span class="post-index">{String(index + 1).padStart(2, '0')}</span>
+            <div class="post-content">
+              <h2>{post.data.title}</h2>
+              <p class="description">{post.data.description}</p>
+              <div class="meta">
+                <time datetime={post.data.pubDate.toISOString()}>
+                  {post.data.pubDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </time>
+                <span class="separator">•</span>
+                <span class="author">{post.data.author}</span>
               </div>
-            )}
+              {post.data.tags.length > 0 && (
+                <div class="tags">
+                  {post.data.tags.slice(0, 3).map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+            <span class="arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
           </a>
         </li>
       ))}
     </ul>
   ) : (
-    <p class="empty">No posts yet. Check back soon!</p>
+    <div class="empty">
+      <p class="empty-command"><span class="prompt">$</span> cat posts.txt</p>
+      <p class="empty-output">No posts found. Check back soon!</p>
+    </div>
   )}
 </BaseLayout>
 
 <style>
+  .page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
   h1 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 .prompt {
+    color: var(--color-accent);
+    margin-right: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
   }
 
   .filters {
-    background: #f5f5f5;
-    padding: 1rem;
+    background: var(--color-bg-secondary);
+    padding: 1.25rem;
     border-radius: 8px;
     margin-bottom: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
     font-size: 0.9rem;
+    border: 1px solid var(--color-border);
   }
 
   .filter-group {
     display: flex;
     flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .filter-label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    min-width: 80px;
+    padding-top: 0.25rem;
+  }
+
+  .filter-items {
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
-    align-items: center;
+    flex: 1;
   }
 
   .category,
   .tag {
-    background: #e0e0e0;
-    padding: 0.2rem 0.6rem;
+    font-family: var(--font-mono);
+    padding: 0.35rem 0.75rem;
     border-radius: 4px;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
   }
 
   .category {
-    background: var(--color-primary);
-    color: white;
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .tag {
+    background: var(--color-border);
+    color: var(--color-text-secondary);
   }
 
   .post-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
+  }
+
+  .post-list li {
+    animation: fadeIn 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .post-list li a {
-    display: block;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
     padding: 1.5rem;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     color: inherit;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: all 0.2s ease;
   }
 
   .post-list li a:hover {
     text-decoration: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-accent);
+    background: var(--color-bg-secondary);
+  }
+
+  .post-list li a:hover .arrow {
+    opacity: 1;
+    transform: translateX(4px);
+  }
+
+  .post-index {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    flex-shrink: 0;
+    padding-top: 0.35rem;
+  }
+
+  .post-content {
+    flex: 1;
+    min-width: 0;
   }
 
   .post-list h2 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     margin-bottom: 0.5rem;
     color: var(--color-text);
+    line-height: 1.3;
   }
 
   .post-list .description {
-    color: var(--color-muted);
+    color: var(--color-text-secondary);
     margin-bottom: 0.75rem;
+    line-height: 1.5;
   }
 
   .meta {
     display: flex;
-    gap: 1rem;
-    font-size: 0.85rem;
-    color: var(--color-muted);
-    margin-bottom: 0.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+  }
+
+  .separator {
+    opacity: 0.4;
   }
 
   .tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-top: 0.5rem;
+  }
+
+  .arrow {
+    flex-shrink: 0;
+    color: var(--color-accent);
+    opacity: 0;
+    transition: all 0.2s ease;
+    padding-top: 0.35rem;
   }
 
   .empty {
-    color: var(--color-muted);
     text-align: center;
-    padding: 3rem 0;
+    padding: 4rem 2rem;
+    background: var(--color-bg-secondary);
+    border-radius: 8px;
+    border: 1px dashed var(--color-border);
+  }
+
+  .empty-command {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-command .prompt {
+    color: var(--color-accent);
+  }
+
+  .empty-output {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 600px) {
+    .post-list li a {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .post-index {
+      padding-top: 0;
+    }
+
+    .arrow {
+      display: none;
+    }
   }
 </style>

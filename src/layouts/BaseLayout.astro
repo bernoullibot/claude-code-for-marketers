@@ -15,17 +15,20 @@ interface Props {
 }
 
 const { title, description, image, imageAlt, article } = Astro.props;
-const siteTitle = 'My Blog';
+const siteTitle = 'Claude Code for Marketers';
 const fullTitle = `${title} | ${siteTitle}`;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
     <title>{fullTitle}</title>
     <SEO
       title={fullTitle}
@@ -34,33 +37,97 @@ const fullTitle = `${title} | ${siteTitle}`;
       imageAlt={imageAlt}
       article={article}
     />
+    <script is:inline>
+      // Check for saved theme or system preference
+      const getTheme = () => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      };
+      document.documentElement.setAttribute('data-theme', getTheme());
+    </script>
   </head>
   <body>
+    <div class="scanlines"></div>
     <header>
       <nav>
-        <a href="/" class="logo">{siteTitle}</a>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/blog">Blog</a></li>
-        </ul>
+        <a href="/" class="logo">
+          <span class="prompt">&gt;</span>
+          <span class="logo-text">{siteTitle}</span>
+          <span class="cursor"></span>
+        </a>
+        <div class="nav-right">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+          <button class="theme-toggle" aria-label="Toggle theme" type="button">
+            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </div>
       </nav>
     </header>
     <main>
       <slot />
     </main>
     <footer>
-      <p>&copy; {new Date().getFullYear()} {siteTitle}. All rights reserved.</p>
+      <p><span class="prompt">#</span> &copy; {new Date().getFullYear()} {siteTitle}</p>
     </footer>
+    <script>
+      const toggle = document.querySelector('.theme-toggle');
+      toggle?.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    </script>
   </body>
 </html>
 
 <style is:global>
   :root {
-    --color-bg: #fafafa;
-    --color-text: #1a1a1a;
-    --color-primary: #0066cc;
-    --color-muted: #666;
-    --max-width: 720px;
+    /* Light theme */
+    --color-bg: #FAFAF8;
+    --color-bg-secondary: #F0EFEB;
+    --color-text: #1C1917;
+    --color-text-secondary: #57534E;
+    --color-accent: #DA7756;
+    --color-accent-hover: #C4684A;
+    --color-border: #E7E5E0;
+    --color-code-bg: #292524;
+    --color-code-text: #FAFAF9;
+    --max-width: 680px;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --scanline-opacity: 0;
+  }
+
+  [data-theme="dark"] {
+    --color-bg: #0C0A09;
+    --color-bg-secondary: #1C1917;
+    --color-text: #FAFAF9;
+    --color-text-secondary: #A8A29E;
+    --color-accent: #F2A688;
+    --color-accent-hover: #DA7756;
+    --color-border: #292524;
+    --color-code-bg: #1C1917;
+    --color-code-text: #FAFAF9;
+    --scanline-opacity: 0.03;
   }
 
   * {
@@ -69,28 +136,59 @@ const fullTitle = `${title} | ${siteTitle}`;
     padding: 0;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: var(--font-body);
     background: var(--color-bg);
     color: var(--color-text);
-    line-height: 1.6;
+    line-height: 1.7;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-size: 17px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Scanline overlay for dark mode */
+  .scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: var(--scanline-opacity);
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.3) 2px,
+      rgba(0, 0, 0, 0.3) 4px
+    );
   }
 
   a {
-    color: var(--color-primary);
+    color: var(--color-accent);
     text-decoration: none;
+    transition: color 0.2s ease;
   }
 
   a:hover {
-    text-decoration: underline;
+    color: var(--color-accent-hover);
   }
 
   header {
-    border-bottom: 1px solid #e0e0e0;
-    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    padding: 1.25rem 1.5rem;
+    position: sticky;
+    top: 0;
+    background: var(--color-bg);
+    z-index: 100;
+    backdrop-filter: blur(10px);
   }
 
   nav {
@@ -102,9 +200,43 @@ const fullTitle = `${title} | ${siteTitle}`;
   }
 
   nav .logo {
-    font-weight: bold;
-    font-size: 1.25rem;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.95rem;
     color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  nav .logo:hover {
+    color: var(--color-text);
+  }
+
+  nav .logo .prompt {
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  nav .logo .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1.1em;
+    background: var(--color-accent);
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
   }
 
   nav ul {
@@ -113,18 +245,103 @@ const fullTitle = `${title} | ${siteTitle}`;
     list-style: none;
   }
 
+  nav ul a {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.02em;
+  }
+
+  nav ul a:hover {
+    color: var(--color-accent);
+  }
+
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-secondary);
+    transition: all 0.2s ease;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .sun-icon {
+    display: none;
+  }
+
+  .moon-icon {
+    display: block;
+  }
+
+  [data-theme="dark"] .sun-icon {
+    display: block;
+  }
+
+  [data-theme="dark"] .moon-icon {
+    display: none;
+  }
+
   main {
     flex: 1;
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: 3rem 1.5rem;
     width: 100%;
   }
 
   footer {
-    border-top: 1px solid #e0e0e0;
-    padding: 1rem;
+    border-top: 1px solid var(--color-border);
+    padding: 1.5rem;
     text-align: center;
-    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+  }
+
+  footer .prompt {
+    color: var(--color-accent);
+    margin-right: 0.5rem;
+  }
+
+  /* Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  /* Selection */
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-secondary);
   }
 </style>

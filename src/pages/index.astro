@@ -4,109 +4,361 @@ import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 5);
+  .slice(0, 3);
 ---
 
 <BaseLayout
   title="Home"
-  description="Welcome to my blog where I share thoughts on technology, development, and more."
+  description="Learn how to use Claude Code as a marketer. Practical tutorials, tips, and workflows for non-technical professionals."
 >
   <section class="hero">
-    <h1>Welcome to My Blog</h1>
-    <p>Thoughts on technology, development, and more.</p>
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <span class="terminal-dot red"></span>
+        <span class="terminal-dot yellow"></span>
+        <span class="terminal-dot green"></span>
+      </div>
+      <div class="terminal-body">
+        <p class="terminal-line"><span class="prompt">$</span> claude --help</p>
+        <p class="terminal-output">Welcome, Marketer.</p>
+      </div>
+    </div>
+    <h1>Claude Code<br/><span class="highlight">for Marketers</span></h1>
+    <p class="tagline">Practical tutorials for non-technical professionals ready to unlock the power of AI-assisted development.</p>
+    <div class="cta-group">
+      <a href="/blog" class="cta-primary">Start Learning</a>
+      <a href="#recent" class="cta-secondary">Latest Posts</a>
+    </div>
   </section>
 
-  <section class="recent-posts">
-    <h2>Recent Posts</h2>
+  <section class="features">
+    <div class="feature">
+      <span class="feature-icon">01</span>
+      <h3>No Coding Required</h3>
+      <p>Step-by-step guides written specifically for marketers with zero programming experience.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">02</span>
+      <h3>Real Marketing Tasks</h3>
+      <p>Automate reports, analyze campaigns, build landing pages, and streamline your workflow.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">03</span>
+      <h3>Practical Examples</h3>
+      <p>Copy-paste prompts and templates you can use immediately in your marketing work.</p>
+    </div>
+  </section>
+
+  <section class="recent-posts" id="recent">
+    <h2><span class="prompt">#</span> Recent Posts</h2>
     {posts.length > 0 ? (
       <ul class="post-list">
-        {posts.map((post) => (
-          <li>
+        {posts.map((post, index) => (
+          <li style={`animation-delay: ${index * 0.1}s`}>
             <a href={`/blog/${post.id}`}>
-              <h3>{post.data.title}</h3>
-              <p class="description">{post.data.description}</p>
-              <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </time>
+              <span class="post-number">{String(index + 1).padStart(2, '0')}</span>
+              <div class="post-content">
+                <h3>{post.data.title}</h3>
+                <p class="description">{post.data.description}</p>
+                <time datetime={post.data.pubDate.toISOString()}>
+                  {post.data.pubDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </time>
+              </div>
             </a>
           </li>
         ))}
       </ul>
     ) : (
-      <p>No posts yet. Check back soon!</p>
+      <p class="empty-state">
+        <span class="prompt">$</span> No posts yet. Check back soon!
+      </p>
     )}
-    <a href="/blog" class="view-all">View all posts &rarr;</a>
+    <a href="/blog" class="view-all">
+      <span>View all posts</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </a>
   </section>
 </BaseLayout>
 
 <style>
   .hero {
     text-align: center;
-    padding: 3rem 0;
-    border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 2rem;
+    padding: 2rem 0 4rem;
+    margin-bottom: 3rem;
   }
 
-  .hero h1 {
-    font-size: 2.5rem;
+  .terminal-window {
+    max-width: 320px;
+    margin: 0 auto 2.5rem;
+    background: #1C1917;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border: 1px solid #292524;
+  }
+
+  .terminal-header {
+    background: #292524;
+    padding: 0.75rem 1rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .terminal-dot.red { background: #ff5f56; }
+  .terminal-dot.yellow { background: #ffbd2e; }
+  .terminal-dot.green { background: #27ca40; }
+
+  .terminal-body {
+    padding: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-align: left;
+    color: #FAFAF9;
+  }
+
+  .terminal-line {
     margin-bottom: 0.5rem;
   }
 
-  .hero p {
-    color: var(--color-muted);
-    font-size: 1.2rem;
+  .terminal-line .prompt {
+    color: #DA7756;
+    margin-right: 0.5rem;
+  }
+
+  .terminal-output {
+    color: #a8a29e;
+    padding-left: 1rem;
+  }
+
+  .hero h1 {
+    font-size: 2.75rem;
+    margin-bottom: 1rem;
+    line-height: 1.15;
+  }
+
+  .hero h1 .highlight {
+    color: var(--color-accent);
+  }
+
+  .tagline {
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    max-width: 480px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+  }
+
+  .cta-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-primary,
+  .cta-secondary {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.875rem 1.75rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .cta-primary {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .cta-primary:hover {
+    background: var(--color-accent-hover);
+    color: var(--color-bg);
+    transform: translateY(-2px);
+  }
+
+  .cta-secondary {
+    background: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+  }
+
+  .cta-secondary:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  /* Features Section */
+  .features {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  @media (min-width: 600px) {
+    .features {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .feature {
+    text-align: left;
+  }
+
+  .feature-icon {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    display: block;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  .feature h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature p {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Recent Posts */
+  .recent-posts {
+    padding-top: 1rem;
   }
 
   .recent-posts h2 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     margin-bottom: 1.5rem;
+  }
+
+  .recent-posts h2 .prompt {
+    color: var(--color-accent);
+    margin-right: 0.5rem;
   }
 
   .post-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
+  }
+
+  .post-list li {
+    animation: fadeInUp 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .post-list li a {
-    display: block;
-    padding: 1.5rem;
-    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     color: inherit;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: all 0.2s ease;
   }
 
   .post-list li a:hover {
     text-decoration: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-accent);
+    background: var(--color-bg-secondary);
+  }
+
+  .post-number {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    flex-shrink: 0;
+    padding-top: 0.2rem;
+  }
+
+  .post-content {
+    flex: 1;
   }
 
   .post-list h3 {
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
     color: var(--color-text);
   }
 
   .post-list .description {
-    color: var(--color-muted);
+    color: var(--color-text-secondary);
     margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
 
   .post-list time {
-    font-size: 0.85rem;
-    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+  }
+
+  .empty-state {
+    font-family: var(--font-mono);
+    color: var(--color-text-secondary);
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .empty-state .prompt {
+    color: var(--color-accent);
   }
 
   .view-all {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     margin-top: 1.5rem;
+    font-family: var(--font-mono);
     font-weight: 500;
+    font-size: 0.9rem;
+    transition: gap 0.2s ease;
+  }
+
+  .view-all:hover {
+    gap: 0.75rem;
+  }
+
+  .view-all svg {
+    transition: transform 0.2s ease;
+  }
+
+  .view-all:hover svg {
+    transform: translateX(2px);
   }
 </style>

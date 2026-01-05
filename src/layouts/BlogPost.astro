@@ -11,13 +11,13 @@ const { title, description, pubDate, updatedDate, author, image, imageAlt, tags,
 
 const formattedPubDate = pubDate.toLocaleDateString('en-US', {
   year: 'numeric',
-  month: 'long',
+  month: 'short',
   day: 'numeric',
 });
 
 const formattedUpdatedDate = updatedDate?.toLocaleDateString('en-US', {
   year: 'numeric',
-  month: 'long',
+  month: 'short',
   day: 'numeric',
 });
 ---
@@ -36,34 +36,33 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString('en-US', {
 >
   <article>
     <header class="post-header">
+      <a href="/blog" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Back to posts</span>
+      </a>
       <h1>{title}</h1>
       <div class="meta">
         <time datetime={pubDate.toISOString()}>{formattedPubDate}</time>
         {updatedDate && (
           <span class="updated">
-            (Updated: <time datetime={updatedDate.toISOString()}>{formattedUpdatedDate}</time>)
+            <span class="separator">•</span>
+            Updated {formattedUpdatedDate}
           </span>
         )}
-        <span class="author">by {author}</span>
+        <span class="separator">•</span>
+        <span class="author">{author}</span>
       </div>
       {(categories.length > 0 || tags.length > 0) && (
         <div class="taxonomies">
-          {categories.length > 0 && (
-            <div class="categories">
-              <strong>Categories:</strong>
-              {categories.map((category) => (
-                <span class="category">{category}</span>
-              ))}
-            </div>
-          )}
-          {tags.length > 0 && (
-            <div class="tags">
-              <strong>Tags:</strong>
-              {tags.map((tag) => (
-                <span class="tag">{tag}</span>
-              ))}
-            </div>
-          )}
+          {categories.map((category) => (
+            <span class="category">{category}</span>
+          ))}
+          {tags.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
         </div>
       )}
     </header>
@@ -71,6 +70,15 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString('en-US', {
     <div class="content">
       <slot />
     </div>
+    <footer class="post-footer">
+      <a href="/blog" class="back-link-footer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Back to all posts</span>
+      </a>
+    </footer>
   </article>
 </BaseLayout>
 
@@ -79,107 +87,216 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString('en-US', {
     max-width: 100%;
   }
 
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+    gap: 0.75rem;
+  }
+
+  .back-link svg {
+    transition: transform 0.2s ease;
+  }
+
+  .back-link:hover svg {
+    transform: translateX(-3px);
+  }
+
   .post-header {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
   }
 
   h1 {
-    font-size: 2.5rem;
-    line-height: 1.2;
-    margin-bottom: 0.5rem;
+    font-size: 2.25rem;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
   }
 
   .meta {
-    color: var(--color-muted);
-    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.5rem;
+    margin-bottom: 1rem;
   }
 
-  .updated {
-    font-style: italic;
+  .separator {
+    opacity: 0.4;
   }
 
   .taxonomies {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-  }
-
-  .categories,
-  .tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    align-items: center;
   }
 
   .category,
   .tag {
-    background: #e0e0e0;
-    padding: 0.2rem 0.6rem;
+    font-family: var(--font-mono);
+    padding: 0.35rem 0.75rem;
     border-radius: 4px;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
+    font-weight: 500;
   }
 
   .category {
-    background: var(--color-primary);
-    color: white;
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .tag {
+    background: var(--color-border);
+    color: var(--color-text-secondary);
   }
 
   .featured-image {
     width: 100%;
     height: auto;
     border-radius: 8px;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--color-border);
   }
 
   .content {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
   }
 
   .content :global(h2) {
-    font-size: 1.75rem;
-    margin: 2rem 0 1rem;
+    font-size: 1.5rem;
+    margin: 2.5rem 0 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
   }
 
   .content :global(h3) {
-    font-size: 1.5rem;
-    margin: 1.5rem 0 0.75rem;
+    font-size: 1.25rem;
+    margin: 2rem 0 0.75rem;
   }
 
   .content :global(p) {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
   }
 
   .content :global(ul),
   .content :global(ol) {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
     padding-left: 1.5rem;
   }
 
+  .content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
   .content :global(pre) {
-    background: #1a1a1a;
-    color: #f0f0f0;
-    padding: 1rem;
+    background: #1C1917;
+    color: #FAFAF9;
+    padding: 1.25rem;
     border-radius: 8px;
     overflow-x: auto;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #292524;
+    font-size: 0.9rem;
   }
 
   .content :global(code) {
-    font-family: 'Menlo', 'Monaco', monospace;
+    font-family: var(--font-mono);
     font-size: 0.9em;
   }
 
+  .content :global(p code),
+  .content :global(li code) {
+    background: var(--color-bg-secondary);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85em;
+    border: 1px solid var(--color-border);
+  }
+
   .content :global(blockquote) {
-    border-left: 4px solid var(--color-primary);
-    padding-left: 1rem;
+    border-left: 3px solid var(--color-accent);
+    padding: 1rem 1.25rem;
     margin: 1.5rem 0;
-    font-style: italic;
-    color: var(--color-muted);
+    background: var(--color-bg-secondary);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .content :global(blockquote p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .content :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .content :global(a:hover) {
+    text-decoration-color: var(--color-accent);
+  }
+
+  .content :global(img) {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    border: 1px solid var(--color-border);
+  }
+
+  .content :global(hr) {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 2.5rem 0;
+  }
+
+  .post-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .back-link-footer {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-accent);
+    transition: all 0.2s ease;
+  }
+
+  .back-link-footer:hover {
+    gap: 0.75rem;
+  }
+
+  .back-link-footer svg {
+    transition: transform 0.2s ease;
+  }
+
+  .back-link-footer:hover svg {
+    transform: translateX(-3px);
+  }
+
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 1.75rem;
+    }
+
+    .content {
+      font-size: 1rem;
+    }
   }
 </style>
