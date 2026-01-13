@@ -11,6 +11,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 <BaseLayout
   title="Home"
   description="Learn how to use Claude Code as a marketer. Practical tutorials, tips, and workflows for non-technical professionals."
+  image="/og/default.png"
 >
   <section class="hero">
     <div class="terminal-window">
@@ -25,7 +26,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       </div>
     </div>
     <h1>Claude Code<br/><span class="highlight">for Marketers</span></h1>
-    <p class="tagline">Practical tutorials for non-technical professionals ready to unlock the power of AI-assisted development.</p>
+    <p class="tagline">AI superpowers for marketers. No coding required.</p>
     <div class="cta-group">
       <a href="/blog" class="cta-primary">Start Learning</a>
       <a href="#recent" class="cta-secondary">Latest Posts</a>
