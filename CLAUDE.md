@@ -167,6 +167,7 @@ Based on edits to the introduction section:
 - Long, complex sentences that could be broken up
 - Passive voice when active is available
 - Redundant setup phrases that state the obvious ("This wasn't X—this was Y" → just say "This was Y")
+- "Not X, just Y" framing ("These aren't advanced techniques — they're just things that aren't obvious" → just say what it IS: "These are things that aren't immediately obvious")
 - Unnecessary framing before making a point (get to the point directly)
 - Em dashes — use appositives (commas) or parentheticals instead. Example: "all in a single interface" not "all—without leaving the terminal"
 
