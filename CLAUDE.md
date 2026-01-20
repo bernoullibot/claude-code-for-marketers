@@ -33,6 +33,12 @@ npm run preview  # Preview production build
 - Required frontmatter: `title`, `description`, `pubDate`
 - Optional: `updatedDate`, `author`, `image`, `imageAlt`, `tags`, `categories`, `draft`
 
+### Images
+- Store blog images in `src/assets/images/blog/`
+- Reference with relative paths in markdown: `![Alt text](../../assets/images/blog/filename.png)`
+- Astro automatically converts to WebP and compresses at build time
+- Do NOT use `public/` for blog images (no optimization) or absolute paths like `/images/...`
+
 ### Layout Hierarchy
 - `BaseLayout.astro` - Global layout with header, footer, theme toggle, CSS variables
 - `BlogPost.astro` - Article layout (wraps BaseLayout)

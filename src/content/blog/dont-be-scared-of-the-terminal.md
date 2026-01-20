@@ -16,7 +16,7 @@ But here's the thing: the terminal is just a textbox<sup>*</sup>.
 
 <em>* Ok, that's a bit reductive. It's a textbox that can control your entire computer, so "just" is doing a lot of heavy lifting there. But that's what makes it powerful. It's the most direct way to talk to your machine. You type what you want, and it happens.</em>
 
-![The Claude Code interface showing a friendly robot logo, version info, and a prompt waiting for input](/images/blog/claude-code-interface.png)
+![The Claude Code interface showing a friendly robot logo, version info, and a prompt waiting for input](../../assets/images/blog/claude-code-interface.png)
 
 ## How commands work
 
@@ -46,7 +46,7 @@ It's going to be ok. Here's why.
 
 Nothing happens without your approval. When Claude wants to run a command or make a change, it asks first. You see exactly what it's proposing, and you can say yes or no.
 
-![Claude Code asking for permission before running a command](/images/blog/asking-for-tool-use.png)
+![Claude Code asking for permission before running a command](../../assets/images/blog/asking-for-tool-use.png)
 
 You're always in the driver's seat. If something feels risky, just say no and tell Claude what you want to try instead.
 

@@ -92,7 +92,7 @@ claude
 
 *Using Claude Code Desktop:* Open the Claude Code desktop app and use the folder picker to navigate to your vault location.
 
-![Claude Code Desktop with an Obsidian vault selected](/images/blog/claude-code-desktop-obsidian-vault.png)
+![Claude Code Desktop with an Obsidian vault selected](../../assets/images/blog/claude-code-desktop-obsidian-vault.png)
 
 That's it. Claude Code can now read and write to your Obsidian vault, and any files it creates will show up in Obsidian automatically.
 

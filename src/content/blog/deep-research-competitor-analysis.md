@@ -41,7 +41,7 @@ What happens next is where Claude Code starts to feel different from regular Cla
 
 Claude Code works in a loop: it decides what to do, uses a tool (like web search), looks at the result, then decides the next step. You'll see it thinking, searching, reading pages, thinking again.
 
-![Claude Code running multiple web searches in sequence](/images/blog/cc_research_loop.png)
+![Claude Code running multiple web searches in sequence](../../assets/images/blog/cc_research_loop.png)
 
 Look at all those searches. Pricing, features, integrations, AI capabilities, user reviews. Claude is doing the tab-switching for me, pulling from a ton of different sources and synthesizing as it goes. This took about five minutes to run.
 
@@ -49,7 +49,7 @@ Look at all those searches. Pricing, features, integrations, AI capabilities, us
 
 Here's a habit I've picked up: I always ask Claude Code to save its work to a markdown file. This means the information it finds can be persistent between sessions and that it's portable. Just by adding `Save this analysis to a file called competitor-analysis.md` to my prompt, I then have a file I can come back to, iterate on, or share with my team.
 
-![The markdown report output with executive summary and comparison table](/images/blog/cc_markdown_output.png)
+![The markdown report output with executive summary and comparison table](../../assets/images/blog/cc_markdown_output.png)
 
 Look at that: an executive summary, a comparison table, detailed platform overviews. All in a clean markdown file that I can open anywhere.
 
@@ -86,7 +86,7 @@ Headers, bullet points, and bold text all transfer cleanly. You might need to tw
 
 <em>NOTE: If you don't see the option to Paste from Markdown, you may have to [enable it](https://support.google.com/docs/answer/12014036?hl=en) in your Google Docs settings.</em>
 
-![Markdown file and Google Doc side by side](/images/blog/cc_markdown_to_gdocs.png)
+![Markdown file and Google Doc side by side](../../assets/images/blog/cc_markdown_to_gdocs.png)
 
 From there, you can share it with your team, add comments, or polish it further, whatever your workflow looks like.
 

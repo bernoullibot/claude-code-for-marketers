@@ -28,11 +28,11 @@ There are two ways to get Claude Code running:
 
 **Installing via the terminal** gives you the full power of Claude Code. You can automate entire workflows, work directly with files on your computer, and build sophisticated multi-step processes. This is what we recommend if you're willing to get comfortable with the terminal.
 
-![Claude Code running in the terminal](/images/blog/claude_code_terminal.png)
+![Claude Code running in the terminal](../../assets/images/blog/claude_code_terminal.png)
 
 **Claude Desktop app** is a simpler starting point. It's a familiar chat interface, and you can enable Claude Code features within it. Great for one-off tasks and experimentation, though with some limitations compared to the terminal version.
 
-![Claude Code in the Desktop app](/images/blog/claude_code_desktop.png)
+![Claude Code in the Desktop app](../../assets/images/blog/claude_code_desktop.png)
 
 My recommendation: if you followed along with [our intro to the terminal](/blog/dont-be-scared-of-the-terminal) and you're feeling even a little bit brave, go with the terminal installation. It's not much harder, and you'll have access to everything Claude Code can do.
 
@@ -54,7 +54,7 @@ The Terminal app comes pre-installed on every Mac. The easiest way to find it:
 
 You'll see a window with a blank line waiting for your input. That's it! You're in the terminal.
 
-![Empty terminal window on Mac](/images/blog/empty_terminal.png)
+![Empty terminal window on Mac](../../assets/images/blog/empty_terminal.png)
 
 #### Step 2: Install Claude Code
 
@@ -80,7 +80,7 @@ If you're not prompted to log in, type `/login`. Either way, you'll see a browse
 
 After authenticating, you should see Claude Code's welcome screen in your terminal. Something like:
 
-![Claude Code welcome screen in terminal](/images/blog/claude_code_terminal.png)
+![Claude Code welcome screen in terminal](../../assets/images/blog/claude_code_terminal.png)
 
 If you see that, you're done! Skip ahead to the "Hello world" section below.
 
@@ -133,13 +133,13 @@ Run the installer and open the app. Sign in with your Claude account.
 
 Click on the "Code" tab in the upper left. You'll see a button to install Claude Code — click it and you're done.
 
-![Claude Code tab in the Desktop app](/images/blog/claude_code_desktop.png)
+![Claude Code tab in the Desktop app](../../assets/images/blog/claude_code_desktop.png)
 
 #### Step 4: Start a session
 
 Create a new session from the Code tab. You're ready to go.
 
-![Starting a new Claude Code session in Desktop](/images/blog/cc_desktop_new_session.png)
+![Starting a new Claude Code session in Desktop](../../assets/images/blog/cc_desktop_new_session.png)
 
 ## Hello world: Your first prompt
 
@@ -153,7 +153,7 @@ Whether you're in the terminal or the Desktop app, try this prompt:
 
 Claude should respond with a list of files. It might ask for permission to access your file system first — that's normal and expected. Say yes.
 
-![Claude listing files in the current folder](/images/blog/claude_files.png)
+![Claude listing files in the current folder](../../assets/images/blog/claude_files.png)
 
 If you see a response listing your files, congratulations — Claude Code is up and running!
 
