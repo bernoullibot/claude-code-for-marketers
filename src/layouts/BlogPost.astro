@@ -7,6 +7,10 @@ interface Props {
   post: CollectionEntry<'blog'>;
 }
 
+function slugify(text: string): string {
+  return text.toLowerCase().replace(/\s+/g, '-');
+}
+
 const { post } = Astro.props;
 const { title, description, pubDate, updatedDate, author, image, imageAlt, tags, categories, kitTagId } = post.data;
 
@@ -62,7 +66,7 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString('en-US', {
       {(categories.length > 0 || tags.length > 0) && (
         <div class="taxonomies">
           {categories.map((category) => (
-            <span class="category">{category}</span>
+            <a href={`/category/${slugify(category)}`} class="category">{category}</a>
           ))}
           {tags.map((tag) => (
             <span class="tag">{tag}</span>
@@ -166,6 +170,11 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString('en-US', {
   .category {
     background: var(--color-accent);
     color: var(--color-bg);
+    text-decoration: none;
+  }
+
+  .category:hover {
+    opacity: 0.85;
   }
 
   .tag {

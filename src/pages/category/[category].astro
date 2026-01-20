@@ -2,50 +2,39 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-function slugify(text: string): string {
-  return text.toLowerCase().replace(/\s+/g, '-');
+export async function getStaticPaths() {
+  const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-');
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const categories = [...new Set(posts.flatMap(post => post.data.categories))];
+
+  return categories.map(category => ({
+    params: { category: slugify(category) },
+    props: { categoryName: category }
+  }));
 }
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const { categoryName } = Astro.props;
 
-const allTags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
-const allCategories = [...new Set(posts.flatMap((post) => post.data.categories))].sort();
+const posts = (await getCollection('blog', ({ data }) =>
+  !data.draft && data.categories.includes(categoryName)
+)).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <BaseLayout
-  title="Blog"
-  description="Tutorials and guides for using Claude Code as a marketer. Learn AI-assisted development without coding experience."
+  title={`${categoryName} Posts`}
+  description={`All posts in the ${categoryName} category. Tutorials and guides for marketers learning Claude Code.`}
 >
   <header class="page-header">
-    <h1><span class="prompt">$</span> ls ./posts</h1>
-    <p class="subtitle">All tutorials and guides</p>
+    <a href="/blog" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>All posts</span>
+    </a>
+    <h1><span class="prompt">$</span> ls ./posts --category="{categoryName}"</h1>
+    <p class="subtitle">{posts.length} {posts.length === 1 ? 'post' : 'posts'} in this category</p>
   </header>
-
-  {(allCategories.length > 0 || allTags.length > 0) && (
-    <aside class="filters">
-      {allCategories.length > 0 && (
-        <div class="filter-group">
-          <span class="filter-label">Categories:</span>
-          <div class="filter-items">
-            {allCategories.map((category) => (
-              <a href={`/category/${slugify(category)}`} class="category">{category}</a>
-            ))}
-          </div>
-        </div>
-      )}
-      {allTags.length > 0 && (
-        <div class="filter-group">
-          <span class="filter-label">Tags:</span>
-          <div class="filter-items">
-            {allTags.map((tag) => (
-              <span class="tag">{tag}</span>
-            ))}
-          </div>
-        </div>
-      )}
-    </aside>
-  )}
 
   {posts.length > 0 ? (
     <ul class="post-list">
@@ -87,7 +76,7 @@ const allCategories = [...new Set(posts.flatMap((post) => post.data.categories))
   ) : (
     <div class="empty">
       <p class="empty-command"><span class="prompt">$</span> cat posts.txt</p>
-      <p class="empty-output">No posts found. Check back soon!</p>
+      <p class="empty-output">No posts found in this category yet.</p>
     </div>
   )}
 </BaseLayout>
@@ -97,6 +86,30 @@ const allCategories = [...new Set(posts.flatMap((post) => post.data.categories))
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--color-border);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+    gap: 0.75rem;
+  }
+
+  .back-link svg {
+    transition: transform 0.2s ease;
+  }
+
+  .back-link:hover svg {
+    transform: translateX(-3px);
   }
 
   h1 {
@@ -112,66 +125,6 @@ const allCategories = [...new Set(posts.flatMap((post) => post.data.categories))
   .subtitle {
     color: var(--color-text-secondary);
     font-size: 1rem;
-  }
-
-  .filters {
-    background: var(--color-bg-secondary);
-    padding: 1.25rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    font-size: 0.9rem;
-    border: 1px solid var(--color-border);
-  }
-
-  .filter-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: flex-start;
-  }
-
-  .filter-label {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--color-text-secondary);
-    min-width: 80px;
-    padding-top: 0.25rem;
-  }
-
-  .filter-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    flex: 1;
-  }
-
-  .category,
-  .tag {
-    font-family: var(--font-mono);
-    padding: 0.35rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-
-  .category {
-    background: var(--color-accent);
-    color: var(--color-bg);
-    text-decoration: none;
-  }
-
-  .category:hover {
-    opacity: 0.85;
-  }
-
-  .tag {
-    background: var(--color-border);
-    color: var(--color-text-secondary);
   }
 
   .post-list {
@@ -219,15 +172,6 @@ const allCategories = [...new Set(posts.flatMap((post) => post.data.categories))
     transform: translateX(4px);
   }
 
-  .post-index {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--color-accent);
-    flex-shrink: 0;
-    padding-top: 0.35rem;
-  }
-
   .post-content {
     flex: 1;
     min-width: 0;
@@ -266,6 +210,16 @@ const allCategories = [...new Set(posts.flatMap((post) => post.data.categories))
     gap: 0.5rem;
   }
 
+  .tag {
+    font-family: var(--font-mono);
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
   .arrow {
     flex-shrink: 0;
     color: var(--color-accent);
@@ -301,10 +255,6 @@ const allCategories = [...new Set(posts.flatMap((post) => post.data.categories))
     .post-list li a {
       flex-direction: column;
       gap: 0.75rem;
-    }
-
-    .post-index {
-      padding-top: 0;
     }
 
     .arrow {
