@@ -18,7 +18,7 @@ This is exactly the kind of task I now hand to Claude Code.
 In this post, I'll walk you through how I used Claude Code to research a competitor and turn that research into a polished report, all in a single interface.
 
 ### A quick note on "deep research" functionality
-If you've used Claude's web interface, you might have seen its [Research](https://support.claude.com/en/articles/11088861-using-research-on-claude) feature, which does extensive multi-step research. That feature isn't available natively in Claude Code (yet). What we're doing here is simpler: using Claude Code's built-in web search combined with ultrathink mode to get solid research without leaving the terminal. For most competitor analyses, this is more than enough.
+If you've used Claude's web interface, you might have seen its [Research](https://support.claude.com/en/articles/11088861-using-research-on-claude) feature, which does extensive multi-step research. That feature isn't available natively in Claude Code (yet). What we're doing here is simpler: using Claude Code's built-in web search to get solid research without leaving the terminal. For most competitor analyses, this is more than enough.
 
 ## What we're building
 
@@ -35,7 +35,7 @@ If you've been following along with this series, you already have [Claude Code i
 
 Here's the prompt I used to get started:
 
-> Can you tell me how Retool workflows compares to n8n? Ultrathink and produce a comprehensive competitive report in Markdown format.
+> Can you tell me how Retool workflows compares to n8n? Produce a comprehensive competitive report in Markdown format.
 
 What happens next is where Claude Code starts to feel different from regular Claude.
 
@@ -44,21 +44,6 @@ Claude Code works in a loop: it decides what to do, uses a tool (like web search
 ![Claude Code running multiple web searches in sequence](/images/blog/cc_research_loop.png)
 
 Look at all those searches. Pricing, features, integrations, AI capabilities, user reviews. Claude is doing the tab-switching for me, pulling from a ton of different sources and synthesizing as it goes. This took about five minutes to run.
-
-## Ultrathink: when to bring in the big guns
-
-You might have noticed "Ultrathink" in my prompt. That's a [specific trigger](https://code.claude.com/docs/en/common-workflows#per-request-thinking-with-ultrathink) for Claude Code.
-
-Using the word ultrathink in your prompt tells Claude to take more time reasoning through complex problems before responding. Instead of a quick answer, Claude spends longer working through the nuances.
-
-When do I use it? Anytime I need:
-- Strategic analysis (like competitor positioning)
-- Synthesis across multiple sources
-- Nuanced recommendations
-
-For a competitor analysis, all three apply. By including "ultrathink" in the initial prompt, I'm telling Claude that I want something that's more than just surface level.
-
-The difference is noticeable. The output is more structured, the reasoning is clearer, and the conclusions feel more considered.
 
 ## Writing to markdown files
 
