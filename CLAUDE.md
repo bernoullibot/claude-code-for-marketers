@@ -298,6 +298,9 @@ Based on edits to the introduction section:
 
 ## Formatting
 - **Heading capitalization**: Use sentence case (only first letter capitalized) rather than title case. Example: "# This is a heading style that we want" not "# This Is A Heading Style That We Want"
+- **Benefit-oriented section headlines**: Avoid generic "Example: [thing]" headlines. Instead, write headlines that tell the reader what they'll learn or the benefit they'll get. Examples:
+  - Before: "## Example: the frontend design skill" → After: "## Better web designs with the frontend-design skill"
+  - Before: "## Example: my Kit broadcast skill" → After: "## Teaching Claude to send email broadcasts"
 - **Bold for emphasis on key phrases**
 - **Bold for important practical points**: "I need some open space in the center of the image for text." - highlight key takeaways
 - **Lowercase for feature names when casual**: "Subtle variations" not "Subtle Variations" initially, but can capitalize for emphasis

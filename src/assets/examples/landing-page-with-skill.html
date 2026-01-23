@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow — Work that flows</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #1a1a1a;
+            --color-cream: #faf8f5;
+            --color-coral: #e85d4c;
+            --color-muted: #8a8580;
+            --color-line: #e5e2dd;
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'DM Sans', system-ui, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-cream);
+            color: var(--color-ink);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Utility */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 clamp(1.5rem, 5vw, 4rem);
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 0;
+            background: var(--color-cream);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        header.scrolled {
+            border-bottom-color: var(--color-line);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            text-decoration: none;
+            color: var(--color-ink);
+        }
+
+        .logo span {
+            color: var(--color-coral);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--color-ink);
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        nav a:hover {
+            opacity: 1;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 100px;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--color-ink);
+            color: var(--color-cream);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-coral);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--color-ink);
+            border: 1.5px solid var(--color-ink);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-ink);
+            color: var(--color-cream);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 0 6rem;
+            position: relative;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--color-muted);
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+            animation: fadeInUp 0.8s ease backwards;
+        }
+
+        .hero-label::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--color-coral);
+            border-radius: 50%;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 400;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.1s backwards;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--color-coral);
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--color-muted);
+            max-width: 440px;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            animation: fadeInUp 0.8s ease 0.3s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-visual {
+            position: relative;
+            animation: fadeIn 1s ease 0.4s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hero-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow:
+                0 4px 6px rgba(0,0,0,0.02),
+                0 12px 40px rgba(0,0,0,0.06);
+            transform: rotate(2deg);
+            transition: transform 0.4s ease;
+        }
+
+        .hero-card:hover {
+            transform: rotate(0deg);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--color-line);
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+        }
+
+        .card-badge {
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 0.35rem 0.75rem;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 100px;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--color-cream);
+            border-radius: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        .task-item:hover {
+            transform: translateX(4px);
+        }
+
+        .task-check {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--color-line);
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .task-item.done .task-check {
+            background: var(--color-coral);
+            border-color: var(--color-coral);
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .task-item.done .task-text {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .task-tag {
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            background: var(--color-line);
+            color: var(--color-muted);
+        }
+
+        .task-tag.urgent {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        /* Floating elements */
+        .float-element {
+            position: absolute;
+            background: white;
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            font-size: 0.85rem;
+            font-weight: 500;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .float-1 {
+            top: 0;
+            right: -20px;
+            animation-delay: 0s;
+        }
+
+        .float-2 {
+            bottom: 40px;
+            left: -30px;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Features */
+        .features {
+            padding: 8rem 0;
+            border-top: 1px solid var(--color-line);
+        }
+
+        .features-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 5rem;
+        }
+
+        .features-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .features-header p {
+            color: var(--color-muted);
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--color-line);
+            transition: background 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            background: var(--color-coral);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--color-cream);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: var(--color-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* CTA */
+        .cta {
+            padding: 8rem 0;
+            background: var(--color-ink);
+            color: var(--color-cream);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--color-coral) 0%, transparent 70%);
+            opacity: 0.15;
+        }
+
+        .cta-content {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .cta h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .cta h2 em {
+            font-style: italic;
+            color: var(--color-coral);
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            opacity: 0.7;
+            margin-bottom: 2.5rem;
+        }
+
+        .cta .btn-primary {
+            background: var(--color-cream);
+            color: var(--color-ink);
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+
+        .cta .btn-primary:hover {
+            background: var(--color-coral);
+            color: var(--color-cream);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--color-line);
+        }
+
+        footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        footer p {
+            font-size: 0.85rem;
+            color: var(--color-muted);
+        }
+
+        footer nav {
+            gap: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-visual {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 640px) {
+            nav a:not(.btn) {
+                display: none;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .float-element {
+                display: none;
+            }
+
+            footer .container {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="#" class="logo">Task<span>Flow</span></a>
+            <nav>
+                <a href="#">Features</a>
+                <a href="#">Pricing</a>
+                <a href="#">About</a>
+                <a href="#" class="btn btn-primary">Get started</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="hero-label">Now in public beta</div>
+                    <h1>Work that <em>actually</em> flows</h1>
+                    <p>Finally, project management that gets out of your way. Organize tasks, collaborate with your team, and ship work faster.</p>
+                    <div class="hero-actions">
+                        <a href="#" class="btn btn-primary">Start free trial →</a>
+                        <a href="#" class="btn btn-outline">Watch demo</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="float-element float-1">✨ 3 tasks completed</div>
+                    <div class="float-element float-2">🎯 On track</div>
+                    <div class="hero-card">
+                        <div class="card-header">
+                            <span class="card-title">This week</span>
+                            <span class="card-badge">4 of 6 done</span>
+                        </div>
+                        <div class="task-list">
+                            <div class="task-item done">
+                                <div class="task-check"></div>
+                                <span class="task-text">Review Q1 marketing plan</span>
+                                <span class="task-tag">Marketing</span>
+                            </div>
+                            <div class="task-item done">
+                                <div class="task-check"></div>
+                                <span class="task-text">Update brand guidelines</span>
+                                <span class="task-tag">Design</span>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-check"></div>
+                                <span class="task-text">Prepare investor deck</span>
+                                <span class="task-tag urgent">Urgent</span>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-check"></div>
+                                <span class="task-text">Schedule team retro</span>
+                                <span class="task-tag">Team</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="features-header">
+                <h2>Everything you need, nothing you don't</h2>
+                <p>Simple tools that work together to help your team stay focused and ship faster.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Task management</h3>
+                    <p>Create, organize, and track tasks with intuitive drag-and-drop. Set priorities, due dates, and never lose sight of what matters.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Team collaboration</h3>
+                    <p>Work together in real-time with shared workspaces, instant updates, and threaded comments that keep everyone aligned.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Progress tracking</h3>
+                    <p>Visual dashboards and reports that actually make sense. See where you stand at a glance and spot bottlenecks before they slow you down.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to <em>flow</em>?</h2>
+                <p>Join thousands of teams who've already made the switch. No credit card required.</p>
+                <a href="#" class="btn btn-primary">Start your free trial →</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 TaskFlow. Made with care.</p>
+            <nav>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Contact</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
