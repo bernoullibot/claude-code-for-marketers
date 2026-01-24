@@ -64,23 +64,29 @@ Static site deployed to Cloudflare Pages. Site URL configured in `astro.config.m
 - Default tag ID: `14154457` (used on homepage and blog posts)
 - Blog posts can specify a custom `kitTagId` in frontmatter for post-specific tagging
 
+**Always use the `EmailSignup` component** (`src/components/EmailSignup.astro`) when adding email signups to pages. This ensures consistent styling and proper tagging. The component accepts:
+- `headline` — The main heading text
+- `description` — Supporting text below the headline
+- `buttonText` — CTA button text
+- `tagId` — Kit tag ID for subscriber segmentation
+
 ---
 
 # Content Strategy
 
 ## Intro sequence (email course)
 
-The foundation of the site is a 7-post intro sequence that also serves as an email course:
+The foundation of the site is a 7-post intro sequence that also serves as an email course. Available at `/start`.
 
-| # | Title | Status |
-|---|-------|--------|
-| 1 | Don't be scared of the terminal | published |
-| 2 | Installing/setting up Claude Code | in-progress |
-| 3 | Use case: Turn a tweet thread into a blog post | idea |
-| 4 | Ways to get even better at prompting | idea |
-| 5 | Use case: Deep research for a competitor page | idea |
-| 6 | What are skills? | idea |
-| 7 | What are subagents? | idea |
+| # | Slug | Title |
+|---|------|-------|
+| 1 | `dont-be-scared-of-the-terminal` | Don't Be Scared of the Terminal |
+| 2 | `installing-claude-code` | Your first 5 minutes with Claude Code |
+| 3 | `deep-research-competitor-analysis` | How I use Claude Code to research competitors |
+| 4 | `claude-code-tricks-i-wish-id-known-sooner` | Claude Code tricks I wish I'd known sooner |
+| 5 | `obsidian-as-your-second-brain` | Obsidian as your second brain |
+| 6 | `giving-claude-code-superpowers-with-mcp-servers` | Giving Claude Code superpowers with MCP servers |
+| 7 | `what-are-skills` | What are skills and how do they work? |
 
 ## Content status key
 

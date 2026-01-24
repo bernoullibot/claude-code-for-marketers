@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EmailSignup from '../components/EmailSignup.astro';
+import { getCollection } from 'astro:content';
+
+// Define the intro sequence order by slug
+// Posts are shown in this specific order (the 7-day email course sequence)
+const introSequenceSlugs = [
+  'dont-be-scared-of-the-terminal',           // Day 1: Why the terminal isn't scary
+  'installing-claude-code',                    // Day 2: Installing and running Claude Code
+  'deep-research-competitor-analysis',         // Day 3: Real use case - competitor research
+  'claude-code-tricks-i-wish-id-known-sooner', // Day 4: Tricks that make it more powerful
+  'obsidian-as-your-second-brain',             // Day 5: Pairing with Obsidian
+  'giving-claude-code-superpowers-with-mcp-servers', // Day 6: Extending with MCP
+  'what-are-skills',                           // Day 7: Teaching Claude new skills
+];
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+
+// Filter and order posts according to the intro sequence
+const posts = introSequenceSlugs
+  .map((slug) => allPosts.find((post) => post.id === slug))
+  .filter((post): post is NonNullable<typeof post> => post !== undefined);
+---
+
+<BaseLayout
+  title="Get Started with Claude Code"
+  description="New to Claude Code? Start here. A curated sequence of posts to take you from zero to productive."
+>
+  <header class="page-header">
+    <h1><span class="prompt">$</span> ./start-here.sh</h1>
+    <p class="subtitle">Your 7-day crash course in Claude Code</p>
+    <p class="intro">
+      New to Claude Code? You're in the right place. Sign up below and I'll send you a new lesson every single day for a week. By the end, you'll be ready to use Claude Code to tackle whatever problem you might throw at it.
+    </p>
+  </header>
+
+  <section class="email-signup">
+    <EmailSignup
+      headline="Get the free 7-day course"
+      description="One lesson per day, delivered to your inbox. By the end of the week, you'll be ready to tackle whatever problem you throw at Claude Code."
+      buttonText="Start the course"
+      tagId="14154457"
+    />
+  </section>
+
+  <section class="read-now">
+    <h2>Prefer to dive in right now?</h2>
+    <p class="section-intro">Here's all the posts that are coming your way once you sign up.</p>
+
+    {posts.length > 0 ? (
+      <ol class="post-list">
+        {posts.map((post, index) => (
+          <li style={`animation-delay: ${index * 0.05}s`}>
+            <a href={`/blog/${post.id}`}>
+              <span class="post-index">{String(index + 1).padStart(2, '0')}</span>
+              <div class="post-content">
+                <h2>{post.data.title}</h2>
+                <p class="description">{post.data.description}</p>
+              </div>
+              <span class="arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <div class="empty">
+        <p class="empty-command"><span class="prompt">$</span> cat posts.txt</p>
+        <p class="empty-output">No posts found. Check back soon!</p>
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: 1.5rem;
+    border-bottom: none;
+    padding: 0;
+    position: static;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 .prompt {
+    color: var(--color-accent);
+    margin-right: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .intro {
+    color: var(--color-text);
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .email-signup {
+    margin-bottom: 1.5rem;
+  }
+
+  .email-signup :global(.signup-box) {
+    margin: 0;
+  }
+
+  .read-now > h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-intro {
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  .post-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    counter-reset: none;
+    padding-left: 0;
+  }
+
+  .post-list li {
+    animation: fadeIn 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .post-list li a {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: inherit;
+    transition: all 0.2s ease;
+  }
+
+  .post-list li a:hover {
+    text-decoration: none;
+    border-color: var(--color-accent);
+    background: var(--color-bg-secondary);
+  }
+
+  .post-list li a:hover .arrow {
+    opacity: 1;
+    transform: translateX(4px);
+  }
+
+  .post-index {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    flex-shrink: 0;
+    padding-top: 0.15rem;
+    min-width: 2rem;
+  }
+
+  .post-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .post-list h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .post-list .description {
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .arrow {
+    flex-shrink: 0;
+    color: var(--color-accent);
+    opacity: 0;
+    transition: all 0.2s ease;
+    padding-top: 0.35rem;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--color-bg-secondary);
+    border-radius: 8px;
+    border: 1px dashed var(--color-border);
+  }
+
+  .empty-command {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-command .prompt {
+    color: var(--color-accent);
+  }
+
+  .empty-output {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 600px) {
+    .post-list li a {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .post-index {
+      padding-top: 0;
+    }
+
+    .arrow {
+      display: none;
+    }
+  }
+</style>
